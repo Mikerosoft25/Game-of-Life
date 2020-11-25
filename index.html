@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game of Life</title>
+    <link rel="stylesheet" href="stylesheet.css">
+    <script defer src="./script.js"></script>
+</head>
+<body>
+    <div id="header">
+        <p>Game of Life</p>
+    </div>
+    <div id="main">
+        <div id="sidebar">
+            <p><button id="startStopButton" class="sideBarElements buttons">Start</button></p>
+            <p><button id="resetButton" class="sideBarElements buttons">Reset</button></p>
+            <p id="status" class="sideBarElements">Status: <span id="statusText">Stopped</span></p>
+            <p id="pauseTimerText" class="sideBarElements">Pause-Time: <span id="pauseTime">1000</span> ms</p>
+            <input type="range" min="100" max="5000" value="1000" step="100" class="sideBarElements slider" id="speedSlider">
+            <p id="generationText" class="sideBarElements">Generation: <span id="generationCount">0</span></p>
+        </div>
+        <div id="game">
+            <table id="gameTable"></table>
+        </div>
+    </div>
+</body>
+</html>

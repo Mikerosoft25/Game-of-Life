@@ -1,3 +1,3 @@
 # Game-of-Life
-Visual Implementation Conway's Game of Life
+Visual Implementation of Conway's Game of Life
 
