@@ -16,7 +16,7 @@ window.onload = function() {
     let statusText = document.getElementById("statusText");
     let startStopButton = document.getElementById("startStopButton");
     let resetButton = document.getElementById("resetButton");
-    let pauseTim = document.getElementById("pauseTim");
+    let pauseTime = document.getElementById("pauseTime");
     let speedSlider = document.getElementById("speedSlider");
 
     startStopButton.addEventListener('click', function(){
@@ -49,6 +49,7 @@ window.onload = function() {
         statusText.innerText = "Stopped";
         generationCount.innerText = "0";
         running = false;
+        generation = 0;
     });
 
     speedSlider.addEventListener('input', function(){
@@ -67,7 +68,7 @@ window.onresize = function() {
 
 function addGeneration() {
     generation++;
-    document.getElementById("generationCount").innerText = "Generation: " + generation;
+    document.getElementById("generationCount").innerText = generation;
 }
 
 function populateTable() {
