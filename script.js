@@ -7,8 +7,8 @@ let mouseDown = false;
 let running = false;
 
 window.onload = function() {
-    document.onmousedown = () => mouseDown = true;
-    document.onmouseup = () => mouseDown = false;
+    document.addEventListener("mousedown", () => mouseDown = true);
+    document.addEventListener("mouseup", () => mouseDown = false);
 
     populateTable();
 
