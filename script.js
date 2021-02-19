@@ -132,8 +132,6 @@ class Grid{
                             col = x;
                         }
 
-                        // console.log(row, col);
-
                         if(row !== i || col !== j) {
                             if (this.grid[row][col].isAlive()) {
                                 aliveNeighbourCount++;
@@ -145,7 +143,6 @@ class Grid{
                 }
 
                 let currentCell = this.grid[i][j];
-                // console.log(aliveNeighbourCount);
     
                 if(currentCell.isAlive() && aliveNeighbourCount < 2) {
                     rowArr.push(new Cell(currentCell.getX(), currentCell.getY(), false));
@@ -187,15 +184,11 @@ class Grid{
             this.ctx.strokeStyle = "#c4b6b6";
             this.ctx.strokeRect(cell.getX(), cell.getY(), this.rectSideLength, this.rectSideLength);
         }
-
-        // this.ctx.stroke();
     }
 
     clickedCell(xCoord, yCoord) {
         let col = Math.floor((xCoord - this.leftMargin) / this.rectSideLength);
         let row = Math.floor((yCoord - this.topMargin) / this.rectSideLength);
-
-        // console.log(col, row);
 
         if (row < 0 || col < 0 || row >= this.grid.length || col >= this.grid[0].length) {
             return;
@@ -267,8 +260,6 @@ class Game {
     run() {
         this.grid.determineNextGeneration();
         this.grid.draw();   
-
-        console.log("run!");
 
         this.generation++;
         document.getElementById("generationCount").innerText = this.generation;
@@ -344,8 +335,6 @@ resetButton.addEventListener('click', function(){
 speedSlider.addEventListener('input', function(){
     let pauseVal = speedSlider.value;
     pauseTime.innerText = pauseVal;
-
-    console.log("yo");
 
     game.adjustPauseTimer(pauseVal);
 });
