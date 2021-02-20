@@ -24,12 +24,16 @@ class Cell {
     changeAlive() {
         this.alive = !this.alive;
     }
+
+    equals(otherCell) {
+        return this.x == otherCell.getX() && this.y == otherCell.getY();
+    }
 }
 
 class Grid{
     constructor(rectSideLength = 20) {
         this.grid = [];
-        this.lastClickedCell = [-1, -1];
+        this.lastClickedCell = null;
         this.rectSideLength = rectSideLength;
         this.canvas = document.getElementById("gameCanvas");
         this.ctx = this.canvas.getContext("2d");
@@ -39,6 +43,8 @@ class Grid{
         this.rightMargin = 0;
         this.topMargin = 0;
         this.bottomMargin = 0;
+        this.rowCount = 0;
+        this.colCount = 0;
 
         this.init();
         this.draw();
@@ -74,33 +80,39 @@ class Grid{
         }      
         
         if(!resetCells) {
-            for (let i = 0; i < this.grid.length; i++) {
-                for (let j = 0; j < this.grid[i].length; j++) {
-                    if (i < newGrid.length && j < newGrid[i].length) {
-                        newGrid[i][j].setAlive(this.grid[i][j].isAlive());
+            for (let row = 0; row < this.rowCount; row++) {
+                for (let col = 0; col < this.colCount; col++) {
+                    if (row < newGrid.length && col < newGrid[row].length) {
+                        newGrid[row][col].setAlive(this.grid[row][col].isAlive());
                     }
                 }
             }
         }
 
         this.grid = newGrid;
-    }
-    
-    addRow(row) {
-        this.grid.push(row);
+        this.rowCount = this.grid.length;
+        this.colCount = this.grid[0].length;
     }
 
-    clearGrid() {
-        this.grid = [];
+    resetLastClickedCell() {
+        this.lastClickedCell = null;
+    }
+    
+    validCellCoordinates(row, col) {
+        return row > 0 && col > 0 && row < this.rowCount && col < this.colCount;
+    }
+
+    equalsLastClickedCell(row, col) {
+        return this.lastClickedCell != null && this.grid[row][col].equals(this.lastClickedCell);
     }
 
     determineNextGeneration() {
         let newGrid = [];
 
-        for (let i = 0; i < this.grid.length; i++){
+        for (let i = 0; i < this.rowCount; i++){
             let rowArr = [];
 
-            for (let j = 0; j < this.grid[i].length; j++){            
+            for (let j = 0; j < this.colCount; j++){            
                 let aliveNeighbourCount = 0;
 
                 // coord for top left cell of 3x3 block with i,j middle cell
@@ -112,8 +124,8 @@ class Grid{
 
                 for (let k = 0; k < 3; k++) {
                     if (y < 0) {
-                        row = this.grid.length - 1;
-                    } else if (y >= this.grid.length) {
+                        row = this.rowCount - 1;
+                    } else if (y >= this.rowCount) {
                         row = 0;
                     } else{
                         row = y;
@@ -125,8 +137,8 @@ class Grid{
                     for (let l = 0; l < 3; l++) {
 
                         if (x < 0) {
-                            col = this.grid[row].length - 1;
-                        } else if (x >= this.grid[row].length) {
+                            col = this.colCount - 1;
+                        } else if (x >= this.colCount) {
                             col = 0;
                         } else {
                             col = x;
@@ -162,9 +174,9 @@ class Grid{
     }
 
     draw() {
-        for (let i = 0; i < this.grid.length; i++) {
-            for (let j = 0; j < this.grid[i].length; j++) {
-                this.drawCell(i, j);
+        for (let row = 0; row < this.rowCount; row++) {
+            for (let col = 0; col < this.colCount; col++) {
+                this.drawCell(row, col);
             }
         }
 
@@ -190,19 +202,11 @@ class Grid{
         let col = Math.floor((xCoord - this.leftMargin) / this.rectSideLength);
         let row = Math.floor((yCoord - this.topMargin) / this.rectSideLength);
 
-        if (row < 0 || col < 0 || row >= this.grid.length || col >= this.grid[0].length) {
-            return;
-        } else if (this.lastClickedCell[0] == row && this.lastClickedCell[1] == col) {
-            return;
+        if (this.validCellCoordinates(row, col) && !this.equalsLastClickedCell(row, col)) {
+            this.grid[row][col].changeAlive();
+            this.lastClickedCell = this.grid[row][col];
+            this.drawCell(row, col);
         }
-
-        this.grid[row][col].changeAlive();
-        this.lastClickedCell = [row, col];
-        this.drawCell(row, col);
-    }
-
-    resetLastClickedCell() {
-        this.lastClickedCell = [-1, -1];
     }
 }
 
@@ -275,7 +279,6 @@ let speedSlider = document.getElementById("speedSlider");
 
 let canvas = document.getElementById("gameCanvas");
 let mouseDown = false;
-let lastClickedCell = [-1,-1];
 let grid = new Grid();
 let game = new Game(grid);
 
